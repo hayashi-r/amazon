@@ -15,6 +15,9 @@ Route::get('/', function () {
     return view('welcome');
 });
 
-Route::get('about', function() {
-  return view('about');
-});
+Route::get('/settings', 'SettingsController@index')->name('index');
+Route::post('/amazonauth', 'SettingsController@store')->name('store');
+
+Auth::routes();
+
+Route::get('/home', 'HomeController@index')->name('home');
