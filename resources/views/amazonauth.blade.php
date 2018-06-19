@@ -6,6 +6,8 @@ use App\Mwsauth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\SettingsController;
 
+class
+
 $mws = new Mwsauth;
 
 $mws->seller_id = $request->seller_id;
