@@ -2,10 +2,14 @@
 
 namespace App\Http\Controllers;
 
+use App\Mwsauth;
 use Illuminate\Http\Request;
+use App\Http\Controllers\Controller;
 
 class SettingsController extends Controller
 {
+
+
     /**
      * Display a listing of the resource.
      *
@@ -44,6 +48,15 @@ class SettingsController extends Controller
       'custom_name' => 'nullable'
   ]);
 
+  $mws = new Mwsauth;
+
+  $mws->seller_id = $request->seller_id;
+  $mws->token =  $request->token;
+  $mws->marketplace_id = $request->marketplace_id;
+  $mws->marketplace_name = $request->marketplace_name;
+  $mws->custom_name = $request->custom_name;
+
+  $mws->save();
     }
 
     /**
