@@ -16,9 +16,9 @@ Route::get('/', function () {
 });
 
 Route::get('/settings', 'SettingsController@index');
-
 Route::post('/amazonauth', 'SettingsController@store');
 
 Auth::routes();
-
 Route::get('/home', 'HomeController@index')->name('home');
+
+Route::get('/orders', 'OrdersController@index');
