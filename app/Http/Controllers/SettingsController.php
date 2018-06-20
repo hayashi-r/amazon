@@ -5,6 +5,7 @@ namespace App\Http\Controllers;
 use App\Mwsauth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
+use DB;
 
 class SettingsController extends Controller
 {
@@ -17,6 +18,9 @@ class SettingsController extends Controller
      */
     public function index()
     {
+      $mwsdata = DB::table('mwsauth')->get();
+      return view('settings', compact('mwsdata'));
+
           return view('settings');
       }
 
@@ -46,17 +50,21 @@ class SettingsController extends Controller
       'marketplace_name' => 'required',
       'marketplace_id' => 'required',
       'custom_name' => 'nullable'
-  ]);
+    ]);
 
-  $mws = new Mwsauth;
+      $mws = new Mwsauth;
 
-  $mws->seller_id = $request->seller_id;
-  $mws->token =  $request->token;
-  $mws->marketplace_id = $request->marketplace_id;
-  $mws->marketplace_name = $request->marketplace_name;
-  $mws->custom_name = $request->custom_name;
+      $mws->custId = $request->custId;
+      $mws->seller_id = $request->seller_id;
+      $mws->token =  $request->token;
+      $mws->marketplace_id = $request->marketplace_id;
+      $mws->marketplace_name = $request->marketplace_name;
+      $mws->custom_name = $request->custom_name;
 
-  $mws->save();
+      $mws->save();
+
+      return redirect('settings');
+
     }
 
     /**
