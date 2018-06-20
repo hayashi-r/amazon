@@ -13,4 +13,6 @@ class Mwsauth extends Model
    */
   protected $table = 'mwsauth';
 
+
+
 }
