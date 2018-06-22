@@ -25,7 +25,8 @@ class ReportsController extends Controller
     public function create()
     {
         $requestReport = new Reports();
-        $url = $requestReport->
+        
+        echo $requestReport->requestReport();
 
     }
 
