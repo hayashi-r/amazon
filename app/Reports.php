@@ -19,23 +19,41 @@ class Reports extends Model
     protected $version;
     protected $startDate;
     public $url;
+    protected $secret;
 
-    public function __construct($sellerId, $marketplaceId, $mwsAuthToken)
+    public function __construct()
     {
-      $this->awsAccessKeyIdUS = config('aws.accesskeyidus');
+      $this->awsAccessKeyIdUS = 'AKIAJ3W2Y6O7ZIKID3DA';
       $this->awsAccessKeyIdEU = config('aws.accesskeyiduk');
-      $this->sellerId = $sellerId;
-      $this->marketplaceId = $marketplaceId;
-      $this->mwsAuthToken = $mwsAuthToken;
+      $this->sellerId = 'A1G4PRG75E40ML';
+      $this->marketplaceId = 'ATVPDKIKX0DER';
+      $this->mwsAuthToken = 'amzn.mws.9aa46736-63c5-1cf9-7ae7-5c76c1a65299';
       $this->action = 'RequestReport';
       $this->reportType = '_GET_FLAT_FILE_ACTIONABLE_ORDER_DATA_';
       $this->timestamp = gmdate("Y-m-d\TH:i:s.\\0\\0\\0\\Z", time());
       $this->version = '2009-01-01';
       $this->startDate = gmdate("Y-m-d\TH:i:s.\\0\\0\\0\\Z", time() - 5.098e+6); // 59days
+      $this->secret = '7y0iZ3mF42K7HmFA42if2BFpYt7WQHyoXCcO2M6S';
     }
 
     public function requestReport()
     {
+
+      $param = array();
+      $param['AWSAccessKeyId']   = $this->awsAccessKeyIdUS;
+      $param['Action']           = $this->action;
+      $param['ReportType']           = $this->reportType;
+      $param['SellerId']         = $this->sellerId;
+      $param['MarketplaceIdList.Id.1'] = $this->marketplaceId;
+      $param['MWSAuthToken'] = $this->mwsAuthToken;
+      $param['SignatureMethod']  = $this->signatureMethod;
+      $param['SignatureVersion'] = $this->signatureVersion;
+      $param['Timestamp']        = $this->timestamp;
+      $param['Version']          = $this->version;
+      $param['StartDate']    = $this->startDate;
+
+      $secret = $this->secret;
+
       $url = array();
       foreach ($param as $key => $val) {
 
@@ -73,7 +91,20 @@ class Reports extends Model
       $json = json_encode($xml);
       $reportRequestId = json_decode($json,TRUE);
 
-      return $reportRequestId;
+      $requestId = $reportRequestId['RequestReportResult']['ReportRequestInfo']['ReportRequestId'];
+
+      return redirect()->action(
+      'ReportsController@getReportRequestList', ['requestId' => $requestId]
+       );
+
+    }
+
+    public function requestReportRequestList()
+    {
+
+      $this->requestId = $requestId;
+
+      dd($requestId);
 
     }
 

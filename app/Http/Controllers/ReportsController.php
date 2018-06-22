@@ -25,8 +25,16 @@ class ReportsController extends Controller
     public function create()
     {
         $requestReport = new Reports();
-        
-        echo $requestReport->requestReport();
+        $requestReport = $requestReport->requestReport();
+
+    }
+
+    public function getReportRequestList($requestId)
+    {
+
+      $this->requestId = $requestId;
+
+      echo $requestId;
 
     }
 
