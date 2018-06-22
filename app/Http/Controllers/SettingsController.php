@@ -1,11 +1,16 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use App\Mwsauth;
 use Illuminate\Http\Request;
 use App\Http\Controllers\Controller;
 use DB;
+
 class SettingsController extends Controller
 {
+
+
     /**
      * Display a listing of the resource.
      *
@@ -15,8 +20,12 @@ class SettingsController extends Controller
     {
       $mwsdata = DB::table('mwsauth')->get();
       return view('settings', compact('mwsdata'));
-        
+
+          return view('settings');
       }
+
+
+
     /**
      * Show the form for creating a new resource.
      *
@@ -26,6 +35,7 @@ class SettingsController extends Controller
     {
         //
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -41,16 +51,22 @@ class SettingsController extends Controller
       'marketplace_id' => 'required',
       'custom_name' => 'nullable'
     ]);
+
       $mws = new Mwsauth;
+
       $mws->custId = $request->custId;
       $mws->seller_id = $request->seller_id;
       $mws->token =  $request->token;
       $mws->marketplace_id = $request->marketplace_id;
       $mws->marketplace_name = $request->marketplace_name;
       $mws->custom_name = $request->custom_name;
+
       $mws->save();
+
       return redirect('settings');
+
     }
+
     /**
      * Display the specified resource.
      *
@@ -61,6 +77,7 @@ class SettingsController extends Controller
     {
         //
     }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -71,6 +88,7 @@ class SettingsController extends Controller
     {
         //
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -82,6 +100,7 @@ class SettingsController extends Controller
     {
         //
     }
+
     /**
      * Remove the specified resource from storage.
      *

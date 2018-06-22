@@ -1,6 +1,9 @@
 <?php
+
 namespace App\Http\Controllers;
+
 use Illuminate\Http\Request;
+
 class OrdersController extends Controller
 {
     /**
@@ -13,9 +16,6 @@ class OrdersController extends Controller
         return view('orders');
     }
 
-
-
-
     /**
      * Show the form for creating a new resource.
      *
@@ -25,6 +25,7 @@ class OrdersController extends Controller
     {
         //
     }
+
     /**
      * Store a newly created resource in storage.
      *
@@ -35,6 +36,7 @@ class OrdersController extends Controller
     {
         //
     }
+
     /**
      * Display the specified resource.
      *
@@ -45,6 +47,7 @@ class OrdersController extends Controller
     {
         //
     }
+
     /**
      * Show the form for editing the specified resource.
      *
@@ -55,6 +58,7 @@ class OrdersController extends Controller
     {
         //
     }
+
     /**
      * Update the specified resource in storage.
      *
@@ -66,6 +70,7 @@ class OrdersController extends Controller
     {
         //
     }
+
     /**
      * Remove the specified resource from storage.
      *
