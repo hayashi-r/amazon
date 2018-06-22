@@ -6,6 +6,9 @@ use Illuminate\Database\Eloquent\Model;
 
 class Reports extends Model
 {
+
+    protected $table = 'reports';
+
     protected $awsAccessKeyIdUS;
     protected $awsAccessKeyIdEU;
     protected $sellerId;
@@ -92,6 +95,8 @@ class Reports extends Model
       $reportRequestId = json_decode($json,TRUE);
 
       $requestId = $reportRequestId['RequestReportResult']['ReportRequestInfo']['ReportRequestId'];
+
+      $saveID = 
 
       return redirect()->action(
       'ReportsController@getReportRequestList', ['requestId' => $requestId]
