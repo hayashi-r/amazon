@@ -25,18 +25,43 @@ class ReportsController extends Controller
     public function create()
     {
         $requestReport = new Reports();
-        $requestReport = $requestReport->requestReport();
+        $requestId = $requestReport->requestReport();
 
+        if(isset($requestId))
+        {
+          $reportRequestList = new Reports();
+          $getReportStatus = $reportRequestList->requestReportRequestList($requestId);
+
+        if($getReportStatus === "_DONE_")
+         {
+
+           $generatedReportId = $reportRequestList->requestReportRequestList($requestId);
+          } else {
+            sleep(20);
+            $reportNewRequestList = new Reports();
+            // $reportRequestList->requestReportRequestList($requestId);
+            $generatedReportId = $reportRequestList->requestReportRequestList($requestId);
+          }
+
+          // Check if Report ID available, if not do something
+
+            if(!$generatedReportId) {
+              echo "No Report ID available";
+            }
+
+            if(isset($generatedReportId))
+            {
+              $newAmazonReport = new Reports();
+              $amazonReport = $newAmazonReport->getAmazonReport($generatedReportId);
+
+              
+
+            }
+
+
+        }
     }
 
-    public function getReportRequestList($requestId)
-    {
-
-      $this->requestId = $requestId;
-
-      echo $requestId;
-
-    }
 
     /**
      * Store a newly created resource in storage.

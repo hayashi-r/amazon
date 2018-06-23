@@ -96,21 +96,130 @@ class Reports extends Model
 
       $requestId = $reportRequestId['RequestReportResult']['ReportRequestInfo']['ReportRequestId'];
 
-      $saveID = 
+     return $requestId;
 
-      return redirect()->action(
-      'ReportsController@getReportRequestList', ['requestId' => $requestId]
-       );
 
     }
 
-    public function requestReportRequestList()
+    public function requestReportRequestList($requestId)
     {
 
       $this->requestId = $requestId;
 
-      dd($requestId);
+      $param = array();
+      $param['AWSAccessKeyId']   = $this->awsAccessKeyIdUS;
+      $param['Action']           = 'GetReportRequestList';
+      $param['ReportRequestIdList.Id.1']           = $requestId;
+      $param['SellerId']         = $this->sellerId;
+      $param['MarketplaceIdList.Id.1'] = $this->marketplaceId;
+      $param['MWSAuthToken'] = $this->mwsAuthToken;
+      $param['SignatureMethod']  = 'HmacSHA256';
+      $param['SignatureVersion'] = '2';
+      $param['Timestamp']        = gmdate("Y-m-d\TH:i:s.\\0\\0\\0\\Z", time());
+      $param['Version']          = '2009-01-01';
+
+      $secret = $this->secret;
+
+      $url = array();
+      foreach ($param as $key => $val) {
+
+          $key = str_replace("%7E", "~", rawurlencode($key));
+          $val = str_replace("%7E", "~", rawurlencode($val));
+          $url[] = "{$key}={$val}";
+      }
+
+      sort($url);
+
+      $arr   = implode('&', $url);
+
+      $sign  = 'GET' . "\n";
+      $sign .= 'mws.amazonservices.com' . "\n";
+      $sign .= '/' . "\n";
+      $sign .= $arr;
+
+      $signature = hash_hmac("sha256", $sign, $secret, true);
+      $signature = urlencode(base64_encode($signature));
+
+      $link  = "https://mws.amazonservices.com/?";
+      $link .= $arr . "&Signature=" . $signature;
+      // echo($link); //for debugging - you can paste this into a browser and see if it loads.
+
+      $ch = curl_init($link);
+      curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/xml'));
+      curl_setopt($ch, CURLOPT_RETURNTRANSFER, true);
+      curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, FALSE);
+      $response = curl_exec($ch);
+      $info = curl_getinfo($ch);
+      curl_close($ch);
+
+      $xml = (array)simplexml_load_string($response);
+
+      $json = json_encode($xml);
+      $reportDetails = json_decode($json,TRUE);
+
+      $reportStatus = $reportDetails['GetReportRequestListResult']['ReportRequestInfo']['ReportProcessingStatus'];
+
+
+      if($reportStatus === "_DONE_")
+      {
+        $generatedReportId = $reportDetails['GetReportRequestListResult']['ReportRequestInfo']['GeneratedReportId'];
+        return $generatedReportId;
+      } else {
+        return $reportStatus;
+      }
+
 
     }
+
+    public function getAmazonReport($generatedReportId)
+    {
+      $param = array();
+      $param['AWSAccessKeyId']   = $this->awsAccessKeyIdUS;
+      $param['Action']           = 'GetReport';
+      $param['ReportId']           = $generatedReportId;
+      $param['SellerId']         = $this->sellerId;
+      $param['MarketplaceIdList.Id.1'] = $this->marketplaceId;
+      $param['MWSAuthToken'] = $this->mwsAuthToken;
+      $param['SignatureMethod']  = 'HmacSHA256';
+      $param['SignatureVersion'] = '2';
+      $param['Timestamp']        = gmdate("Y-m-d\TH:i:s.\\0\\0\\0\\Z", time());
+      $param['Version']          = '2009-01-01';
+
+      $secret = $this->secret;
+
+      $url = array();
+      foreach ($param as $key => $val) {
+
+          $key = str_replace("%7E", "~", rawurlencode($key));
+          $val = str_replace("%7E", "~", rawurlencode($val));
+          $url[] = "{$key}={$val}";
+      }
+
+      sort($url);
+
+      $arr   = implode('&', $url);
+
+      $sign  = 'GET' . "\n";
+      $sign .= 'mws.amazonservices.com' . "\n";
+      $sign .= '/' . "\n";
+      $sign .= $arr;
+
+      $signature = hash_hmac("sha256", $sign, $secret, true);
+      $signature = urlencode(base64_encode($signature));
+
+      $link  = "https://mws.amazonservices.com/?";
+      $link .= $arr . "&Signature=" . $signature;
+      // echo($link); //for debugging - you can paste this into a browser and see if it loads.
+
+
+       $csv = array_map(function($v){return str_getcsv($v, "\t");}, file($link));
+           array_walk($csv, function(&$a) use ($csv) {
+             $a = array_combine($csv[0], $a);
+           });
+           array_shift($csv); # remove column header
+
+      echo '<pre>' , var_dump($csv) , '</pre>';
+    }
+    
 
 }

@@ -24,4 +24,4 @@ Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/orders', 'OrdersController@index');
 
 Route::get('/report', 'ReportsController@create');
-Route::get('/report', 'ReportsController@getReportRequestList');
+// Route::get('/getReportRequestList', 'ReportsController@GetReportRequestList');
