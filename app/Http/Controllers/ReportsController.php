@@ -22,8 +22,9 @@ class ReportsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
+        dd($id);
         $requestReport = new Reports();
         $requestId = $requestReport->requestReport();
 
