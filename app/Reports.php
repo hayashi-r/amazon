@@ -9,8 +9,8 @@ class Reports extends Model
 
     protected $table = 'reports';
 
-    protected $awsAccessKeyIdUS;
-    protected $awsAccessKeyIdEU;
+    protected $awsAccessKeyId;
+    // protected $awsAccessKeyIdEU;
     protected $sellerId;
     protected $marketplaceId;
     protected $mwsAuthToken;
@@ -24,13 +24,12 @@ class Reports extends Model
     public $url;
     protected $secret;
 
-    public function __construct()
+    public function __construct($sellerId, $marketplaceId, $mwsAuthToken)
     {
-      $this->awsAccessKeyIdUS = 'AKIAJ3W2Y6O7ZIKID3DA';
-      $this->awsAccessKeyIdEU = config('aws.accesskeyiduk');
-      $this->sellerId = 'A1G4PRG75E40ML';
-      $this->marketplaceId = 'ATVPDKIKX0DER';
-      $this->mwsAuthToken = 'amzn.mws.9aa46736-63c5-1cf9-7ae7-5c76c1a65299';
+      $this->awsAccessKeyId = 'AKIAJ3W2Y6O7ZIKID3DA';
+      $this->sellerId = $sellerId;
+      $this->marketplaceId = $marketplaceId;
+      $this->mwsAuthToken = $mwsAuthToken;
       $this->action = 'RequestReport';
       $this->reportType = '_GET_FLAT_FILE_ACTIONABLE_ORDER_DATA_';
       $this->timestamp = gmdate("Y-m-d\TH:i:s.\\0\\0\\0\\Z", time());
@@ -43,7 +42,7 @@ class Reports extends Model
     {
 
       $param = array();
-      $param['AWSAccessKeyId']   = $this->awsAccessKeyIdUS;
+      $param['AWSAccessKeyId']   = $this->awsAccessKeyId;
       $param['Action']           = $this->action;
       $param['ReportType']           = $this->reportType;
       $param['SellerId']         = $this->sellerId;
@@ -79,7 +78,7 @@ class Reports extends Model
 
       $link  = "https://mws.amazonservices.com/?";
       $link .= $arr . "&Signature=" . $signature;
-      // echo($link); //for debugging - you can paste this into a browser and see if it loads.
+      // echo $link; //for debugging - you can paste this into a browser and see if it loads.
 
       $ch = curl_init($link);
       curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/xml'));

@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Reports;
+// use App\Mwsauth;
 use Illuminate\Http\Request;
 
 class ReportsController extends Controller
@@ -24,8 +25,14 @@ class ReportsController extends Controller
      */
     public function create($id)
     {
-        dd($id);
-        $requestReport = new Reports();
+        $mwsdata = \App\Mwsauth::where('marketplace_id', $id)->firstOrFail();
+        
+        $sellerId = $mwsdata->seller_id;
+        $marketplaceId = $mwsdata->marketplace_id;
+        $mwsAuthToken = $mwsdata->token;
+             
+        
+        $requestReport = new Reports($sellerId, $marketplaceId, $mwsAuthToken);
         $requestId = $requestReport->requestReport();
 
         if(isset($requestId))
