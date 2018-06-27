@@ -16,9 +16,8 @@ class CreateMwsauthTable extends Migration
         Schema::create('mwsauth', function (Blueprint $table) {
             $table->increments('id');
             $table->integer('custId');
-            $table->string('seller_id');
+            $table->string('seller_id')->unique();
             $table->string('token');
-            $table->string('marketplace_id');
             $table->string('marketplace_name');
             $table->string('custom_name');
             $table->timestamps();
