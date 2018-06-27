@@ -29,26 +29,24 @@ class ReportsController extends Controller
         
         $sellerId = $mwsdata->seller_id;
         $marketplaceId = $mwsdata->marketplace_id;
-        $mwsAuthToken = $mwsdata->token;
-             
+        $mwsAuthToken = $mwsdata->token;  
+        $marketplace = $mwsdata->marketplace_name;
         
+               
         $requestReport = new Reports($sellerId, $marketplaceId, $mwsAuthToken);
         $requestId = $requestReport->requestReport();
 
         if(isset($requestId))
         {
-          $reportRequestList = new Reports();
-          $getReportStatus = $reportRequestList->requestReportRequestList($requestId);
+          $getReportStatus = $requestReport->requestReportRequestList($requestId);
 
         if($getReportStatus === "_DONE_")
          {
 
-           $generatedReportId = $reportRequestList->requestReportRequestList($requestId);
+           $generatedReportId = $requestReport->requestReportRequestList($requestId);
           } else {
             sleep(20);
-            $reportNewRequestList = new Reports();
-            // $reportRequestList->requestReportRequestList($requestId);
-            $generatedReportId = $reportRequestList->requestReportRequestList($requestId);
+            $generatedReportId = $requestReport->requestReportRequestList($requestId);
           }
 
           // Check if Report ID available, if not do something
@@ -59,8 +57,7 @@ class ReportsController extends Controller
 
             if(isset($generatedReportId))
             {
-              $newAmazonReport = new Reports();
-              $amazonReport = $newAmazonReport->getAmazonReport($generatedReportId);
+                $amazonReport = $requestReport->getAmazonReport($generatedReportId);
 
               
 

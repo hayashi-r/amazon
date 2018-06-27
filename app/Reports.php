@@ -10,7 +10,7 @@ class Reports extends Model
     protected $table = 'reports';
 
     protected $awsAccessKeyId;
-    // protected $awsAccessKeyIdEU;
+    protected $endpoint;
     protected $sellerId;
     protected $marketplaceId;
     protected $mwsAuthToken;
@@ -26,18 +26,21 @@ class Reports extends Model
 
     public function __construct($sellerId, $marketplaceId, $mwsAuthToken)
     {
-      $this->awsAccessKeyId = 'AKIAJ3W2Y6O7ZIKID3DA';
       $this->sellerId = $sellerId;
       $this->marketplaceId = $marketplaceId;
       $this->mwsAuthToken = $mwsAuthToken;
+      $this->endpoint = env('AWS_ENDPOINT_NA', "");
+      $this->awsAccessKeyId = env('AWS_ACCESSKEYID_US', "");
+      $this->secret = env('AWS_SECRETKEY_US', "");
       $this->action = 'RequestReport';
       $this->reportType = '_GET_FLAT_FILE_ACTIONABLE_ORDER_DATA_';
       $this->timestamp = gmdate("Y-m-d\TH:i:s.\\0\\0\\0\\Z", time());
       $this->version = '2009-01-01';
       $this->startDate = gmdate("Y-m-d\TH:i:s.\\0\\0\\0\\Z", time() - 5.098e+6); // 59days
-      $this->secret = '7y0iZ3mF42K7HmFA42if2BFpYt7WQHyoXCcO2M6S';
+      
     }
 
+    
     public function requestReport()
     {
 
@@ -69,16 +72,16 @@ class Reports extends Model
       $arr   = implode('&', $url);
 
       $sign  = 'GET' . "\n";
-      $sign .= 'mws.amazonservices.com' . "\n";
+      $sign .= $this->endpoint . "\n";
       $sign .= '/' . "\n";
       $sign .= $arr;
 
       $signature = hash_hmac("sha256", $sign, $secret, true);
       $signature = urlencode(base64_encode($signature));
 
-      $link  = "https://mws.amazonservices.com/?";
+      $link  = "https://" . $this->endpoint. "/?";
       $link .= $arr . "&Signature=" . $signature;
-      // echo $link; //for debugging - you can paste this into a browser and see if it loads.
+      // dd($link); //for debugging - you can paste this into a browser and see if it loads.
 
       $ch = curl_init($link);
       curl_setopt($ch, CURLOPT_HTTPHEADER, array('Content-type: application/xml'));
@@ -106,16 +109,16 @@ class Reports extends Model
       $this->requestId = $requestId;
 
       $param = array();
-      $param['AWSAccessKeyId']   = $this->awsAccessKeyIdUS;
+      $param['AWSAccessKeyId']   = $this->awsAccessKeyId;
       $param['Action']           = 'GetReportRequestList';
       $param['ReportRequestIdList.Id.1']           = $requestId;
       $param['SellerId']         = $this->sellerId;
       $param['MarketplaceIdList.Id.1'] = $this->marketplaceId;
       $param['MWSAuthToken'] = $this->mwsAuthToken;
-      $param['SignatureMethod']  = 'HmacSHA256';
-      $param['SignatureVersion'] = '2';
-      $param['Timestamp']        = gmdate("Y-m-d\TH:i:s.\\0\\0\\0\\Z", time());
-      $param['Version']          = '2009-01-01';
+      $param['SignatureMethod']  = $this->signatureMethod;
+      $param['SignatureVersion'] = $this->signatureVersion;
+      $param['Timestamp']        = $this->timestamp;
+      $param['Version']          = $this->version;
 
       $secret = $this->secret;
 
@@ -132,14 +135,14 @@ class Reports extends Model
       $arr   = implode('&', $url);
 
       $sign  = 'GET' . "\n";
-      $sign .= 'mws.amazonservices.com' . "\n";
+      $sign .= $this->endpoint . "\n";
       $sign .= '/' . "\n";
       $sign .= $arr;
 
       $signature = hash_hmac("sha256", $sign, $secret, true);
       $signature = urlencode(base64_encode($signature));
 
-      $link  = "https://mws.amazonservices.com/?";
+      $link  = "https://" . $this->endpoint. "/?";
       $link .= $arr . "&Signature=" . $signature;
       // echo($link); //for debugging - you can paste this into a browser and see if it loads.
 
@@ -173,16 +176,16 @@ class Reports extends Model
     public function getAmazonReport($generatedReportId)
     {
       $param = array();
-      $param['AWSAccessKeyId']   = $this->awsAccessKeyIdUS;
+      $param['AWSAccessKeyId']   = $this->awsAccessKeyId;
       $param['Action']           = 'GetReport';
       $param['ReportId']           = $generatedReportId;
       $param['SellerId']         = $this->sellerId;
       $param['MarketplaceIdList.Id.1'] = $this->marketplaceId;
       $param['MWSAuthToken'] = $this->mwsAuthToken;
-      $param['SignatureMethod']  = 'HmacSHA256';
-      $param['SignatureVersion'] = '2';
-      $param['Timestamp']        = gmdate("Y-m-d\TH:i:s.\\0\\0\\0\\Z", time());
-      $param['Version']          = '2009-01-01';
+      $param['SignatureMethod']  = $this->signatureMethod;
+      $param['SignatureVersion'] = $this->signatureVersion;
+      $param['Timestamp']        = $this->timestamp;
+      $param['Version']          = $this->version;
 
       $secret = $this->secret;
 
@@ -199,14 +202,14 @@ class Reports extends Model
       $arr   = implode('&', $url);
 
       $sign  = 'GET' . "\n";
-      $sign .= 'mws.amazonservices.com' . "\n";
+      $sign .= $this->endpoint . "\n";
       $sign .= '/' . "\n";
       $sign .= $arr;
 
       $signature = hash_hmac("sha256", $sign, $secret, true);
       $signature = urlencode(base64_encode($signature));
 
-      $link  = "https://mws.amazonservices.com/?";
+      $link  = "https://" . $this->endpoint. "/?";
       $link .= $arr . "&Signature=" . $signature;
       // echo($link); //for debugging - you can paste this into a browser and see if it loads.
 
