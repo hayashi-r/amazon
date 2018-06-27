@@ -57,9 +57,7 @@ class ReportsController extends Controller
             if(isset($generatedReportId))
             {
                 $amazonReport = $requestReport->getAmazonReport($generatedReportId);
-
-              
-
+ 
             }
 
 
