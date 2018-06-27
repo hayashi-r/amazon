@@ -48,22 +48,20 @@ class SettingsController extends Controller
       'seller_id' => 'required|unique:mwsauth|max:20',
       'token' => 'required',
       'marketplace_name' => 'required',
-      'marketplace_id' => 'required',
       'custom_name' => 'nullable'
     ]);
 
       $mws = new Mwsauth;
 
-      $mws->custId = $request->custId;
+      $mws->custId = 100;
       $mws->seller_id = $request->seller_id;
       $mws->token =  $request->token;
-      $mws->marketplace_id = $request->marketplace_id;
       $mws->marketplace_name = $request->marketplace_name;
       $mws->custom_name = $request->custom_name;
 
       $mws->save();
 
-      return redirect('settings');
+      return redirect()->action('ReportsController@create');
 
     }
 
