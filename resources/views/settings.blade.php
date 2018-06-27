@@ -45,10 +45,7 @@
                         </select>
                 </div>
 
-                  <div class="form-group" style="text-align:left;">
-                      <label for="marketplace_id">Marketplace ID:</label>
-                      <input type="text" class="form-control" name="marketplace_id" id="marketplace_id" placeholder="Marketplace ID">
-              </div>
+                  
 
               <div class="form-group" style="text-align:left;">
                       <label for="custom_name">Name of your Marketplace:</label>
@@ -87,7 +84,7 @@
       <div class="tab-pane fade" id="list-{{ $data->custom_name }}" role="tabpanel" aria-labelledby="list-{{ $data->custom_name }}-list"><strong>Marketplace:</strong> {{ $data->marketplace_name }}<br>
        <strong>Seller ID:</strong> {{ $data->seller_id }}<br>
        <strong>Token:</strong> {{ $data->token }}<br>
-       <strong>Marketplace ID:</strong> {{ $data->marketplace_id }}<br>
+       
       </div>
       @endforeach
 
