@@ -63,7 +63,7 @@ class SettingsController extends Controller
 
       $mws->save();
 
-      return redirect('settings');
+      return redirect()->action('ReportsController@create', ['id' => $request->marketplace_id]);
 
     }
 

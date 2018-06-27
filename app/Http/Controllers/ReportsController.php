@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Reports;
+// use App\Mwsauth;
 use Illuminate\Http\Request;
 
 class ReportsController extends Controller
@@ -22,12 +23,50 @@ class ReportsController extends Controller
      *
      * @return \Illuminate\Http\Response
      */
-    public function create()
+    public function create($id)
     {
-        $requestReport = new Reports();
-        $url = $requestReport->
+        $mwsdata = \App\Mwsauth::where('marketplace_id', $id)->firstOrFail();
+        
+        $sellerId = $mwsdata->seller_id;
+        $marketplaceId = $mwsdata->marketplace_id;
+        $mwsAuthToken = $mwsdata->token;  
+        $marketplace = $mwsdata->marketplace_name;
+        
+               
+        $requestReport = new Reports($sellerId, $marketplaceId, $mwsAuthToken);
+        $requestId = $requestReport->requestReport();
 
+        if(isset($requestId))
+        {
+          $getReportStatus = $requestReport->requestReportRequestList($requestId);
+
+        if($getReportStatus === "_DONE_")
+         {
+
+           $generatedReportId = $requestReport->requestReportRequestList($requestId);
+          } else {
+            sleep(20);
+            $generatedReportId = $requestReport->requestReportRequestList($requestId);
+          }
+
+          // Check if Report ID available, if not do something
+
+            if(!$generatedReportId) {
+              echo "No Report ID available";
+            }
+
+            if(isset($generatedReportId))
+            {
+                $amazonReport = $requestReport->getAmazonReport($generatedReportId);
+
+              
+
+            }
+
+
+        }
     }
+
 
     /**
      * Store a newly created resource in storage.
