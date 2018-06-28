@@ -18,7 +18,7 @@ class SettingsController extends Controller
      */
     public function index()
     {
-      $mwsdata = DB::table('mwsauth')->get();
+      $mwsdata = DB::table('mwsauth')->groupBy('orderid')->selectRaw('GROUP_CONCAT(orderid) as orderid')->get();
       return view('settings', compact('mwsdata'));
 
           return view('settings');

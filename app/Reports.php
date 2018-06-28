@@ -22,6 +22,7 @@ class Reports extends Model
     protected $version;
     protected $startDate;
     public $url;
+    public $orderarray;
     protected $secret;
 
     public function __construct($sellerId, $marketplace, $mwsAuthToken)
@@ -235,7 +236,41 @@ class Reports extends Model
            });
            array_shift($csv); # remove column header
 
-      echo '<pre>' , var_dump($csv) , '</pre>';
+      // echo '<pre>' , var_dump($csv) , '</pre>';
+      
+           $orderarray = [];
+
+      foreach($csv as $data => $orderdata){
+        $orderarray[] = [
+        'custid' => 100,
+        'orderid' => $orderdata['order-id'],
+        'purchasedate' => $orderdata['purchase-date'],
+        'shipby' => $orderdata['promise-date'],
+        'buyeremail' => $orderdata['buyer-email'],
+        'buyername' => $orderdata['buyer-name'],
+        'buyerphone' => $orderdata['buyer-phone-number'],
+        'sku' => $orderdata['sku'],
+        'productname' => $orderdata['product-name'],
+        'qtypurchased' => (INT)$orderdata['quantity-purchased'],
+        'shiplevel' => $orderdata['ship-service-level'],
+        'recipient' => $orderdata['recipient-name'],
+        'address1' => $orderdata['ship-address-1'],
+        'address2' => $orderdata['ship-address-2'],
+        'address3' => $orderdata['ship-address-3'],
+        'city' => $orderdata['ship-city'],
+        'state' => $orderdata['ship-state'],
+        'postalcode' => $orderdata['ship-postal-code'],
+        'country' => $orderdata['ship-country'],
+        'businessorder' => (bool)$orderdata['is-business-order'],
+        'marketplace' => $this->marketplace,
+        'created_at' => date("Y-m-d H:i:s"),
+        'updated_at' => date("Y-m-d H:i:s")
+        ];
+
+      }
+
+      \DB::table('order')->insert($orderarray);
+
     }
     
 

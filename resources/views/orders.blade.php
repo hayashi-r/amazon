@@ -10,49 +10,37 @@
               <tr>
                 <th scope="col">Order ID</th>
                 <th scope="col">Order Date</th>
-                <th scope="col">Marketplace</th>
+                <th scope="col">Ship By</th>
                 <th scope="col">SKU</th>
                 <th scope="col">Product Name</th>
-                <th scope="col">Quantity</th>
-                <th scope="col">Ship to</th>
+                <th scope="col">QTY</th>
                 <th scope="col">Shipping</th>
-                <th scope="col">Ship by</th>
+                <th scope="col">Address</th>
               </tr>
             </thead>
             <tbody>
+              
+              
+              
+              @foreach ($orderdata as $orderd)
               <tr>
-                <th scope="row">1</th>
-                <td>Mark</td>
-                <td>Otto</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
+              <td>{{ $orderd->orderid }}</td>
+              <td>{{ $orderd->purchasedate }}</td>
+              <td>{{ $orderd->shipby }}</td>
+              <td>{{ $orderd->sku }}</td>
+              <td>{{ $orderd->productname }}</td>
+              <td>{{ $orderd->qtypurchased }}</td>
+              <td>{{ $orderd->shiplevel }}</td>
+              <td>{{ $orderd->recipient }}<br>
+              {{ $orderd->address1 }}<br>
+              {{ $orderd->address2 }}<br>
+              {{ $orderd->postalcode }} {{ $orderd->city }}<br>
+              {{ $orderd->country }}<br>
+              </td>
               </tr>
-              <tr>
-                <th scope="row">2</th>
-                <td>Jacob</td>
-                <td>Thornton</td>
-                <td>@fat</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-              </tr>
-              <tr>
-                <th scope="row">3</th>
-                <td>Larry</td>
-                <td>the Bird</td>
-                <td>@twitter</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-                <td>@mdo</td>
-              </tr>
+              @endforeach
+              
+              
             </tbody>
           </table>
 

@@ -17,8 +17,8 @@ class CreateOrderTable extends Migration
             $table->increments('id');
             $table->integer('custId');
             $table->string('orderid');
-            $table->dateTime('purchasedate');
-            $table->dateTime('shipby');
+            $table->string('purchasedate');
+            $table->string('shipby');
             $table->string('buyeremail');
             $table->string('buyername');
             $table->string('buyerphone');
