@@ -227,7 +227,7 @@ class Reports extends Model
 
       $link  = "https://" . $this->endpoint. "/?";
       $link .= $arr . "&Signature=" . $signature;
-      // echo($link); //for debugging - you can paste this into a browser and see if it loads.
+     // dd($link); //for debugging - you can paste this into a browser and see if it loads.
 
 
        $csv = array_map(function($v){return str_getcsv($v, "\t");}, file($link));
@@ -261,7 +261,7 @@ class Reports extends Model
         'state' => $orderdata['ship-state'],
         'postalcode' => $orderdata['ship-postal-code'],
         'country' => $orderdata['ship-country'],
-        'businessorder' => (bool)$orderdata['is-business-order'],
+        'businessorder' => $orderdata['is-business-order'] == 'true' ? 1 : 0,
         'marketplace' => $this->marketplace,
         'created_at' => date("Y-m-d H:i:s"),
         'updated_at' => date("Y-m-d H:i:s")
@@ -271,7 +271,10 @@ class Reports extends Model
 
       \DB::table('order')->insert($orderarray);
 
+      return redirect()->route('orders');
+
     }
+    
     
 
 }

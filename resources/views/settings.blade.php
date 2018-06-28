@@ -41,7 +41,7 @@
                         <label for="marketplace_name">Amazon Marketplace:</label>
                         <select class="form-control" name="marketplace_name" id="marketplace_name">
                           <option value="Amazon.com">Amazon.com</option>
-                          <option value="Amazon.co.uk">Amazon.co.uk</option>
+                          <option value="Amazon.de">Amazon.de</option>
                         </select>
                 </div>
 
